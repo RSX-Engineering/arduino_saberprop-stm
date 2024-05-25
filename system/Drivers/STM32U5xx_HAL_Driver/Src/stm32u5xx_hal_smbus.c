@@ -1007,15 +1007,8 @@ HAL_StatusTypeDef HAL_SMBUS_Master_Transmit_IT(SMBUS_HandleTypeDef *hsmbus, uint
       /* PEC byte is automatically sent by HW block, no need to manage it in Transmit process */
       if (SMBUS_GET_PEC_MODE(hsmbus) != 0UL)
       {
-        if (hsmbus->XferSize > 0U)
-        {
-          hsmbus->XferSize--;
-          hsmbus->XferCount--;
-        }
-        else
-        {
-          return HAL_ERROR;
-        }
+        hsmbus->XferSize--;
+        hsmbus->XferCount--;
       }
     }
 
@@ -2625,11 +2618,8 @@ static void SMBUS_ITErrorHandler(SMBUS_HandleTypeDef *hsmbus)
     __HAL_SMBUS_CLEAR_FLAG(hsmbus, SMBUS_FLAG_PECERR);
   }
 
-  if (hsmbus->ErrorCode != HAL_SMBUS_ERROR_NONE)
-  {
-    /* Flush TX register */
-    SMBUS_Flush_TXDR(hsmbus);
-  }
+  /* Flush TX register */
+  SMBUS_Flush_TXDR(hsmbus);
 
   /* Store current volatile hsmbus->ErrorCode, misra rule */
   tmperror = hsmbus->ErrorCode;

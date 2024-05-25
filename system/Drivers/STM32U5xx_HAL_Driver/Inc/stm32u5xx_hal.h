@@ -81,6 +81,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   */
 
 
+
 /** @defgroup SYSCFG_Exported_Constants SYSCFG Exported Constants
   * @{
   */
@@ -230,10 +231,6 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define SYSCFG_OTG_HS_PHY_UNDERRESET  0x00000000U              /*!< PHY under reset */
 #define SYSCFG_OTG_HS_PHY_ENABLE      SYSCFG_OTGHSPHYCR_EN     /*!< PHY enabled */
 
-/**
-  * @}
-  */
-
 /** @defgroup SYSCFG_OTG_PHYTUNER_PreemphasisCurrent  OTG PHYTUNER Preemphasis Current
   * @{
   */
@@ -274,7 +271,6 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /**
   * @}
   */
-
 #endif /* SYSCFG_OTGHSPHYCR_EN */
 /**
   * @}
@@ -685,14 +681,13 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /**
   * @}
   */
-
 /* Exported functions --------------------------------------------------------*/
 
-/** @addtogroup HAL_Exported_Functions HAL Exported Functions
+/** @addtogroup HAL_Exported_Functions
   * @{
   */
 
-/** @addtogroup HAL_Exported_Functions_Group1 HAL Initialization and de-initialization Functions
+/** @addtogroup HAL_Exported_Functions_Group1
   * @{
   */
 
@@ -707,7 +702,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority);
   * @}
   */
 
-/** @addtogroup HAL_Exported_Functions_Group2 HAL Control functions
+/** @addtogroup HAL_Exported_Functions_Group2
   * @{
   */
 
@@ -731,7 +726,7 @@ uint32_t HAL_GetUIDw2(void);
   * @}
   */
 
-/** @addtogroup HAL_Exported_Functions_Group3 HAL Debug functions
+/** @addtogroup HAL_Exported_Functions_Group3
   * @{
   */
 
@@ -745,7 +740,7 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void);
   * @}
   */
 
-/** @addtogroup HAL_Exported_Functions_Group4 HAL SYSCFG configuration functions
+/** @addtogroup HAL_Exported_Functions_Group4
   * @{
   */
 
@@ -767,8 +762,6 @@ void HAL_SYSCFG_SetOTGPHYPreemphasisCurrent(uint32_t PreemphasisCurrent);
 #endif /* SYSCFG_OTGHSPHYCR_EN */
 void HAL_SYSCFG_EnableIOAnalogSwitchBooster(void);
 void HAL_SYSCFG_DisableIOAnalogSwitchBooster(void);
-void HAL_SYSCFG_EnableIOAnalogSwitchVoltageSelection(void);
-void HAL_SYSCFG_DisableIOAnalogSwitchVoltageSelection(void);
 void HAL_SYSCFG_EnableSRAMCached(void);
 void HAL_SYSCFG_DisableSRAMCached(void);
 void HAL_SYSCFG_EnableVddCompensationCell(void);
@@ -785,7 +778,7 @@ void HAL_SYSCFG_DisableVddHSPICompensationCell(void);
   * @}
   */
 
-/** @addtogroup HAL_Exported_Functions_Group5 HAL SYSCFG lock management functions
+/** @addtogroup HAL_Exported_Functions_Group5
   * @{
   */
 
@@ -799,7 +792,7 @@ HAL_StatusTypeDef HAL_SYSCFG_GetLock(uint32_t *pItem);
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
-/** @addtogroup HAL_Exported_Functions_Group6 HAL SYSCFG attributes management functions
+/** @addtogroup HAL_Exported_Functions_Group6
   * @{
   */
 
@@ -812,6 +805,10 @@ HAL_StatusTypeDef HAL_SYSCFG_GetConfigAttributes(uint32_t Item, uint32_t *pAttri
   */
 
 #endif /* __ARM_FEATURE_CMSE */
+
+/**
+  * @}
+  */
 
 /**
   * @}

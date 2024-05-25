@@ -2585,11 +2585,8 @@ static void SMBUS_ITErrorHandler(SMBUS_HandleTypeDef *hsmbus)
     __HAL_SMBUS_CLEAR_FLAG(hsmbus, SMBUS_FLAG_PECERR);
   }
 
-  if (hsmbus->ErrorCode != HAL_SMBUS_ERROR_NONE)
-  {
-    /* Flush TX register */
-    SMBUS_Flush_TXDR(hsmbus);
-  }
+  /* Flush TX register */
+  SMBUS_Flush_TXDR(hsmbus);
 
   /* Store current volatile hsmbus->ErrorCode, misra rule */
   tmperror = hsmbus->ErrorCode;

@@ -2399,7 +2399,7 @@ void HAL_PWREx_DisableSRAM4FastWakeUp(void)
   *
 @verbatim
  ===============================================================================
-            ##### IO Pull-Up Pull-Down Configuration Functions #####
+            ##### I/O Pull-Up Pull-Down Configuration Functions #####
  ===============================================================================
     [..]
       In Standby and Shutdown mode, pull up and pull down can be configured to

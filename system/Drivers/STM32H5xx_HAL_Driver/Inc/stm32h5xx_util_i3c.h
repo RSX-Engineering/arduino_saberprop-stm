@@ -27,11 +27,9 @@ extern "C" {
 /* Includes ----------------------------------------------------------------------------------------------------------*/
 #if defined (USE_HAL_DRIVER)
 #include "stm32h5xx_hal.h"
-#endif /* USE_HAL_DRIVER */
-
-#if defined (USE_FULL_LL_DRIVER)
+#else
 #include "stm32h5xx_ll_i3c.h"
-#endif /* USE_FULL_LL_DRIVER */
+#endif /* USE_HAL_DRIVER */
 
 /** @addtogroup STM32H5xx_UTIL_Driver
   * @{

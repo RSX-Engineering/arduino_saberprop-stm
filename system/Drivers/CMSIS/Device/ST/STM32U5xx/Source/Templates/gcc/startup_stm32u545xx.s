@@ -12,7 +12,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2023 STMicroelectronics.
+ * Copyright (c) ${year} STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -124,6 +124,7 @@ Infinite_Loop:
 ******************************************************************************/
   .section .isr_vector,"a",%progbits
   .type g_pfnVectors, %object
+  .size g_pfnVectors, .-g_pfnVectors
 
 g_pfnVectors:
 	.word	_estack
@@ -268,8 +269,6 @@ g_pfnVectors:
 	.word	CORDIC_IRQHandler
 	.word	FMAC_IRQHandler
 	.word	LSECSSD_IRQHandler
-
-  .size g_pfnVectors, .-g_pfnVectors
 
 
 /*******************************************************************************

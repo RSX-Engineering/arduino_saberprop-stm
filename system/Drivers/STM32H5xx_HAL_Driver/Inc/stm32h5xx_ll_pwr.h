@@ -529,73 +529,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM2_16K_ShutOff(void)
 {
   return ((READ_BIT(PWR->PMCR, PWR_PMCR_SRAM2_16SO) == (PWR_PMCR_SRAM2_16SO)) ? 1UL : 0UL);
 }
-#endif /* PWR_PMCR_SRAM2_16SO */
-
-#if defined(PWR_PMCR_SRAM2_16HSO)
-/**
-  * @brief  Enable the AHB RAM2 high 16K Bytes shut-off in Stop mode
-  * @rmtoll PMCR    SRAM2_16HSO     LL_PWR_EnableAHBRAM2_High_16K_ShutOff
-  * @retval None
-  */
-__STATIC_INLINE void LL_PWR_EnableAHBRAM2_High_16K_ShutOff(void)
-{
-  SET_BIT(PWR->PMCR, PWR_PMCR_SRAM2_16HSO);
-}
-
-/**
-  * @brief  Disable the AHB RAM2 high 16K Bytes shut-off in Stop mode
-  * @rmtoll PMCR    SRAM2_16HSO     LL_PWR_DisableAHBRAM2_High_16K_ShutOff
-  * @retval None
-  */
-__STATIC_INLINE void LL_PWR_DisableAHBRAM2_High_16K_ShutOff(void)
-{
-  CLEAR_BIT(PWR->PMCR, PWR_PMCR_SRAM2_16HSO);
-}
-
-/**
-  * @brief  Check if the high AHB RAM2 shut-off in Stop mode is enabled
-  * @rmtoll PMCR    SRAM2_16HSO     LL_PWR_IsEnabledAHBRAM2_16K_ShutOff
-  * @retval State of bit (1 or 0).
-  */
-__STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM2_High_16K_ShutOff(void)
-{
-  return ((READ_BIT(PWR->PMCR, PWR_PMCR_SRAM2_16HSO) == (PWR_PMCR_SRAM2_16HSO)) ? 1UL : 0UL);
-}
-#endif /* PWR_PMCR_SRAM2_16HSO */
-
-#if defined(PWR_PMCR_SRAM2_16LSO)
-/**
-  * @brief  Enable the AHB RAM2 low 16K Bytes shut-off in Stop mode
-  * @rmtoll PMCR    SRAM2_16LSO     LL_PWR_EnableAHBRAM2_Low_16K_ShutOff
-  * @retval None
-  */
-__STATIC_INLINE void LL_PWR_EnableAHBRAM2_Low_16K_ShutOff(void)
-{
-  SET_BIT(PWR->PMCR, PWR_PMCR_SRAM2_16LSO);
-}
-
-/**
-  * @brief  Disable the AHB RAM2 low 16K Bytes shut-off in Stop mode
-  * @rmtoll PMCR    SRAM2_16LSO     LL_PWR_DisableAHBRAM2_Low_16K_ShutOff
-  * @retval None
-  */
-__STATIC_INLINE void LL_PWR_DisableAHBRAM2_Low_16K_ShutOff(void)
-{
-  CLEAR_BIT(PWR->PMCR, PWR_PMCR_SRAM2_16LSO);
-}
-
-/**
-  * @brief  Check if the low 16K AHB RAM2 shut-off in Stop mode is enabled
-  * @rmtoll PMCR    SRAM2_16LSO     LL_PWR_IsEnabledAHBRAM2_Low_16K_ShutOff
-  * @retval State of bit (1 or 0).
-  */
-__STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM2_Low_16K_ShutOff(void)
-{
-  return ((READ_BIT(PWR->PMCR, PWR_PMCR_SRAM2_16LSO) == (PWR_PMCR_SRAM2_16LSO)) ? 1UL : 0UL);
-}
-#endif /* PWR_PMCR_SRAM2_16LSO */
-
-#if defined (PWR_PMCR_SRAM2SO)
+#else
 /**
   * @brief  Enable the AHB RAM2 shut-off in Stop mode
   * @rmtoll PMCR    SRAM2SO     LL_PWR_EnableAHBRAM2ShutOff
@@ -625,7 +559,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledAHBRAM2ShutOff(void)
 {
   return ((READ_BIT(PWR->PMCR, PWR_PMCR_SRAM2SO) == (PWR_PMCR_SRAM2SO)) ? 1UL : 0UL);
 }
-#endif /* PWR_PMCR_SRAM2SO */
+#endif /* PWR_PMCR_SRAM2_16SO */
 
 #if defined (PWR_PMCR_SRAM3SO)
 /**
@@ -1158,36 +1092,33 @@ __STATIC_INLINE uint32_t LL_PWR_IsEnabledUSBVoltageDetector(void)
 
 /**
   * @brief  Enable the independent USB supply.
-  * @rmtoll USBSCR    USB33SV       LL_PWR_EnableVddUSB
+  * @rmtoll USBSCR    USB33SV       LL_PWR_EnableVDDUSB
   * @retval None
   */
-__STATIC_INLINE void LL_PWR_EnableVddUSB(void)
+__STATIC_INLINE void LL_PWR_EnableVDDUSB(void)
 {
   SET_BIT(PWR->USBSCR, PWR_USBSCR_USB33SV);
 }
-#define LL_PWR_EnableVDDUSB  LL_PWR_EnableVddUSB /* for API backward compatibility */
 
 /**
   * @brief  Disable the independent USB supply.
-  * @rmtoll USBSCR    USB33SV       LL_PWR_DisableVddUSB
+  * @rmtoll USBSCR    USB33SV       LL_PWR_DisableVDDUSB
   * @retval None
   */
-__STATIC_INLINE void LL_PWR_DisableVddUSB(void)
+__STATIC_INLINE void LL_PWR_DisableVDDUSB(void)
 {
   CLEAR_BIT(PWR->USBSCR, PWR_USBSCR_USB33SV);
 }
-#define LL_PWR_DisableVDDUSB  LL_PWR_DisableVddUSB /* for API backward compatibility */
 
 /**
   * @brief  Check if the independent USB supply is enabled.
-  * @rmtoll USBSCR    USB33SV       LL_PWR_IsEnabledVddUSB
+  * @rmtoll USBSCR    USB33SV       LL_PWR_IsEnabledVDDUSB
   * @retval State of bit (1 or 0).
   */
-__STATIC_INLINE uint32_t LL_PWR_IsEnabledVddUSB(void)
+__STATIC_INLINE uint32_t LL_PWR_IsEnabledVDDUSB(void)
 {
   return ((READ_BIT(PWR->USBSCR, PWR_USBSCR_USB33SV) == (PWR_USBSCR_USB33SV)) ? 1UL : 0UL);
 }
-#define LL_PWR_IsEnabledVDDUSB  LL_PWR_IsEnabledVddUSB /* for API backward compatibility */
 #endif /* PWR_USBSCR_USB33DEN */
 
 /**

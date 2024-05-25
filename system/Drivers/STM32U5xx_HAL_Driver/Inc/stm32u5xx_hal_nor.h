@@ -24,7 +24,6 @@
 extern "C" {
 #endif
 
-#if defined(FMC_BANK1)
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx_ll_fmc.h"
@@ -317,7 +316,6 @@ HAL_NOR_StatusTypeDef HAL_NOR_GetStatus(NOR_HandleTypeDef *hnor, uint32_t Addres
   * @}
   */
 
-#endif /* FMC_BANK1 */
 
 #ifdef __cplusplus
 }

@@ -109,7 +109,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx_hal.h"
 
-#if defined(FMC_BANK3)
 
 /** @addtogroup STM32U5xx_HAL_Driver
   * @{
@@ -2229,5 +2228,3 @@ uint32_t HAL_NAND_Read_Status(const NAND_HandleTypeDef *hnand)
 /**
   * @}
   */
-
-#endif /* FMC_BANK3 */

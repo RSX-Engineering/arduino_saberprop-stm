@@ -56,6 +56,7 @@
 
     (#) At this stage, you can perform MMC read/write/erase operations after MMC card initialization
 
+
   *** MMC Card Initialization and configuration ***
   ================================================
   [..]
@@ -547,6 +548,7 @@ HAL_StatusTypeDef HAL_MMC_DeInit(MMC_HandleTypeDef *hmmc)
 
   return HAL_OK;
 }
+
 
 /**
   * @brief  Initializes the MMC MSP.
@@ -3535,6 +3537,7 @@ HAL_StatusTypeDef HAL_MMC_AwakeDevice(MMC_HandleTypeDef *hmmc)
   * @{
   */
 
+
 /**
   * @brief  Initializes the mmc card.
   * @param  hmmc: Pointer to MMC handle
@@ -3617,6 +3620,7 @@ static uint32_t MMC_InitCard(MMC_HandleTypeDef *hmmc)
   {
     hmmc->ErrorCode |= errorstate;
   }
+
 
   /* Get Extended CSD parameters */
   if (HAL_MMC_GetCardExtCSD(hmmc, hmmc->Ext_CSD, SDMMC_DATATIMEOUT) != HAL_OK)
@@ -3866,6 +3870,7 @@ static void MMC_Read_IT(MMC_HandleTypeDef *hmmc)
   uint8_t *tmp;
 
   tmp = hmmc->pRxBuffPtr;
+
 
   if (hmmc->RxXferSize >= SDMMC_FIFO_SIZE)
   {

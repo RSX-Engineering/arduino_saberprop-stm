@@ -212,6 +212,8 @@ HAL_StatusTypeDef HAL_CRCEx_Output_Data_Reverse(CRC_HandleTypeDef *hcrc, uint32_
 }
 
 
+
+
 /**
   * @}
   */

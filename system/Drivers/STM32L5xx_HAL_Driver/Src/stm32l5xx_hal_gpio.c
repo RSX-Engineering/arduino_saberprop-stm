@@ -361,7 +361,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
   * @brief  Read the specified input port pin.
   * @param  GPIOx where x can be (A..H) to select the GPIO peripheral for STM32L5 family
   * @param  GPIO_Pin specifies the port bit to read.
-  *         This parameter can be any combination of GPIO_PIN_x where x can be (0..15).
+  *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
   * @retval The input port pin value.
   */
 GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
@@ -391,7 +391,7 @@ GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   *
   * @param  GPIOx where x can be (A..H) to select the GPIO peripheral for STM32L5 family
   * @param  GPIO_Pin specifies the port bit to be written.
-  *         This parameter can be any combination of GPIO_PIN_x where x can be (0..15).
+  *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
   * @param  PinState specifies the value to be written to the selected bit.
   *         This parameter can be one of the GPIO_PinState enum values:
   *            @arg GPIO_PIN_RESET: to clear the port pin
@@ -418,7 +418,7 @@ void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState Pin
   * @brief  Toggle the specified GPIO pin.
   * @param  GPIOx where x can be (A..H) to select the GPIO peripheral for STM32L5 family
   * @param  GPIO_Pin specifies the pin to be toggled.
-  *         This parameter can be any combination of GPIO_PIN_x where x can be (0..15).
+  *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
   * @retval None
   */
 void HAL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
@@ -443,8 +443,8 @@ void HAL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   *         until the next reset.
   * @param  GPIOx where x can be (A..H) to select the GPIO peripheral for STM32L5 family
   * @param  GPIO_Pin specifies the port bits to be locked.
-  *         This parameter can be any combination of GPIO_PIN_x where x can be (0..15).
-  * @retval HAL Status.
+  *         This parameter can be any combination of GPIO_Pin_x where x can be (0..15).
+  * @retval None
   */
 HAL_StatusTypeDef HAL_GPIO_LockPin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 {
@@ -556,6 +556,8 @@ __weak void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
   */
 void HAL_GPIO_ConfigPinAttributes(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t PinAttributes)
 {
+  uint32_t position = 0U;
+  uint32_t iocurrent;
   uint32_t temp;
 
   /* Check the parameters */
@@ -563,15 +565,21 @@ void HAL_GPIO_ConfigPinAttributes(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32
   assert_param(IS_GPIO_PIN(GPIO_Pin));
   assert_param(IS_GPIO_PIN_ATTRIBUTES(PinAttributes));
 
-  /* Configure the port pins */
   temp = GPIOx->SECCFGR;
-  if (PinAttributes != GPIO_PIN_NSEC)
+
+  /* Configure the port pins */
+  while ((GPIO_Pin >> position) != 0U)
   {
-    temp |= (uint32_t)GPIO_Pin;
-  }
-  else
-  {
-    temp &= ~((uint32_t)GPIO_Pin);
+    /* Get current io position */
+    iocurrent = GPIO_Pin & (1UL << position);
+
+    if (iocurrent != 0U)
+    {
+      /* Configure the IO secure attribute */
+      temp &= ~(GPIO_SECCFGR_SEC0 << position) ;
+      temp |= (PinAttributes << position);
+    }
+    position++;
   }
 
   /* Set secure attributes */
@@ -589,6 +597,9 @@ void HAL_GPIO_ConfigPinAttributes(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32
   */
 HAL_StatusTypeDef HAL_GPIO_GetConfigPinAttributes(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t *pPinAttributes)
 {
+  uint32_t position = 0U;
+  uint32_t iocurrent;
+
   /* Check null pointer */
   if (pPinAttributes == NULL)
   {
@@ -600,13 +611,26 @@ HAL_StatusTypeDef HAL_GPIO_GetConfigPinAttributes(GPIO_TypeDef *GPIOx, uint16_t 
   assert_param(IS_GPIO_PIN(GPIO_Pin) && (GPIO_Pin != GPIO_PIN_All));
 
   /* Get secure attribute of the port pin */
-  if ((GPIOx->SECCFGR & GPIO_Pin) != 0x00U)
+  while ((GPIO_Pin >> position) != 0U)
   {
-    *pPinAttributes = GPIO_PIN_SEC;
-  }
-  else
-  {
-    *pPinAttributes = GPIO_PIN_NSEC;
+    /* Get current io position */
+    iocurrent = GPIO_Pin & (1UL << position);
+
+    if (iocurrent != 0U)
+    {
+      /* Get the IO secure attribute */
+      if ((GPIOx->SECCFGR & (GPIO_SECCFGR_SEC0 << position)) != 0U)
+      {
+        *pPinAttributes = GPIO_PIN_SEC;
+      }
+      else
+      {
+        *pPinAttributes = GPIO_PIN_NSEC;
+      }
+
+      break;
+    }
+    position++;
   }
 
   return HAL_OK;

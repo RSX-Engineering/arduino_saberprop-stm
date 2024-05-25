@@ -487,11 +487,6 @@ int HardwareSerial::availableForWrite(void)
   return tail - head - 1;
 }
 
-void HardwareSerial::flush()
-{
-  flush(0);
-}
-
 void HardwareSerial::flush(uint32_t timeout)
 {
   // If we have never written a byte, no need to flush. This special

@@ -1487,12 +1487,12 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sA
     if (sAlarm->FlagAutoClr == ALARM_FLAG_AUTOCLR_ENABLE)
     {
       /* Configure the  Alarm A output clear */
-      SET_BIT(RTC->CR, RTC_CR_ALRAFCLR);
+      SET_BIT(RTC->CR, RTC_CR_ALRAOCLR);
     }
     else
     {
       /* Disable the  Alarm A  output clear */
-      CLEAR_BIT(RTC->CR, RTC_CR_ALRAFCLR);
+      CLEAR_BIT(RTC->CR, RTC_CR_ALRAOCLR);
     }
     /* Configure the Alarm state: Enable Alarm */
     SET_BIT(RTC->CR, RTC_CR_ALRAE);
@@ -1519,12 +1519,12 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sA
     if (sAlarm->FlagAutoClr == ALARM_FLAG_AUTOCLR_ENABLE)
     {
       /* Configure the  Alarm B output clear */
-      SET_BIT(RTC->CR, RTC_CR_ALRBFCLR);
+      SET_BIT(RTC->CR, RTC_CR_ALRBOCLR);
     }
     else
     {
       /* Disable the  Alarm B output clear */
-      CLEAR_BIT(RTC->CR, RTC_CR_ALRBFCLR);
+      CLEAR_BIT(RTC->CR, RTC_CR_ALRBOCLR);
     }
     /* Configure the Alarm state: Enable Alarm */
     SET_BIT(RTC->CR, RTC_CR_ALRBE);
@@ -1692,12 +1692,12 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef 
     if (sAlarm->FlagAutoClr == ALARM_FLAG_AUTOCLR_ENABLE)
     {
       /* Configure the  Alarm A output clear */
-      SET_BIT(RTC->CR, RTC_CR_ALRAFCLR);
+      SET_BIT(RTC->CR, RTC_CR_ALRAOCLR);
     }
     else
     {
       /* Disable the  Alarm A output clear*/
-      CLEAR_BIT(RTC->CR, RTC_CR_ALRAFCLR);
+      CLEAR_BIT(RTC->CR, RTC_CR_ALRAOCLR);
     }
 
     /* Configure the Alarm interrupt */
@@ -1725,17 +1725,18 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef 
     if (sAlarm->FlagAutoClr == ALARM_FLAG_AUTOCLR_ENABLE)
     {
       /* Configure the  Alarm B Output clear */
-      SET_BIT(RTC->CR, RTC_CR_ALRBFCLR);
+      SET_BIT(RTC->CR, RTC_CR_ALRBOCLR);
     }
     else
     {
       /* Disable the  Alarm B Output clear */
-      CLEAR_BIT(RTC->CR, RTC_CR_ALRBFCLR);
+      CLEAR_BIT(RTC->CR, RTC_CR_ALRBOCLR);
     }
 
     /* Configure the Alarm interrupt */
     SET_BIT(RTC->CR, RTC_CR_ALRBE | RTC_CR_ALRBIE);
   }
+
 
 
   hrtc->State = HAL_RTC_STATE_READY;

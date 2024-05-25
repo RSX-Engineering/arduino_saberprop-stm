@@ -24,7 +24,6 @@
 extern "C" {
 #endif
 
-#if defined(FMC_BANK1)
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx_ll_fmc.h"
@@ -223,7 +222,6 @@ HAL_SRAM_StateTypeDef HAL_SRAM_GetState(const SRAM_HandleTypeDef *hsram);
   * @}
   */
 
-#endif /* FMC_BANK1 */
 
 #ifdef __cplusplus
 }

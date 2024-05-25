@@ -73,33 +73,33 @@ typedef struct
 {
   uint32_t PowerMode;                   /*!< Set comparator operating mode to adjust power and speed.
                                              This parameter can be a value of @ref COMP_LL_EC_POWERMODE
-                                             This feature can be modified afterwards using unitary
-                                             function @ref LL_COMP_SetPowerMode(). */
+
+                                             This feature can be modified afterwards using unitary function @ref LL_COMP_SetPowerMode(). */
 
   uint32_t InputPlus;                   /*!< Set comparator input plus (non-inverting input).
                                              This parameter can be a value of @ref COMP_LL_EC_INPUT_PLUS
-                                             This feature can be modified afterwards using unitary function
-                                             @ref LL_COMP_SetInputPlus(). */
+
+                                             This feature can be modified afterwards using unitary function @ref LL_COMP_SetInputPlus(). */
 
   uint32_t InputMinus;                  /*!< Set comparator input minus (inverting input).
                                              This parameter can be a value of @ref COMP_LL_EC_INPUT_MINUS
-                                             This feature can be modified afterwards using unitary function
-                                              @ref LL_COMP_SetInputMinus(). */
+
+                                             This feature can be modified afterwards using unitary function @ref LL_COMP_SetInputMinus(). */
 
   uint32_t InputHysteresis;             /*!< Set comparator hysteresis mode of the input minus.
                                              This parameter can be a value of @ref COMP_LL_EC_INPUT_HYSTERESIS
-                                             This feature can be modified afterwards using unitary function
-                                             @ref LL_COMP_SetInputHysteresis(). */
+
+                                             This feature can be modified afterwards using unitary function @ref LL_COMP_SetInputHysteresis(). */
 
   uint32_t OutputPolarity;              /*!< Set comparator output polarity.
                                              This parameter can be a value of @ref COMP_LL_EC_OUTPUT_POLARITY
-                                             This feature can be modified afterwards using unitary function
-                                             @ref LL_COMP_SetOutputPolarity(). */
+
+                                             This feature can be modified afterwards using unitary function @ref LL_COMP_SetOutputPolarity(). */
 
   uint32_t OutputBlankingSource;        /*!< Set comparator blanking source.
                                              This parameter can be a value of @ref COMP_LL_EC_OUTPUT_BLANKING_SOURCE
-                                             This feature can be modified afterwards using unitary function
-                                             @ref LL_COMP_SetOutputBlankingSource(). */
+
+                                             This feature can be modified afterwards using unitary function @ref LL_COMP_SetOutputBlankingSource(). */
 
 } LL_COMP_InitTypeDef;
 
@@ -113,7 +113,6 @@ typedef struct
   * @{
   */
 
-
 /** @defgroup COMP_LL_EC_COMMON_WINDOWMODE Comparator common modes - Window mode
   * @{
   */
@@ -122,8 +121,6 @@ typedef struct
 /**
   * @}
   */
-
-
 
 /** @defgroup COMP_LL_EC_POWERMODE Comparator modes - Power mode
   * @{
@@ -275,7 +272,8 @@ typedef struct
   * @param  __COMPx__ COMP instance
   * @retval COMP common instance or value "0" if there is no COMP common instance.
   */
-#define __LL_COMP_COMMON_INSTANCE(__COMPx__)          (COMP12_COMMON)
+#define __LL_COMP_COMMON_INSTANCE(__COMPx__)                                   \
+  (COMP12_COMMON)
 
 /**
   * @}
@@ -290,11 +288,9 @@ typedef struct
   * @{
   */
 
-/** @defgroup COMP_LL_EF_Configuration_comparator_common Configuration
-  *           of COMP hierarchical scope: common to several COMP instances
+/** @defgroup COMP_LL_EF_Configuration_comparator_common Configuration of COMP hierarchical scope: common to several COMP instances
   * @{
   */
-
 
 /**
   * @brief  Set window mode of a pair of comparators instances
@@ -328,8 +324,6 @@ __STATIC_INLINE uint32_t LL_COMP_GetCommonWindowMode(const COMP_Common_TypeDef *
 {
   return (uint32_t)(READ_BIT(COMPxy_COMMON->CSR, COMP_CSR_WINMODE));
 }
-
-
 
 /**
   * @}

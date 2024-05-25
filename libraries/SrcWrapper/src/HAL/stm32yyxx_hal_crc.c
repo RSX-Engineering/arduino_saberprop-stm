@@ -38,8 +38,6 @@
   #include "stm32u5xx_hal_crc.c"
 #elif STM32WBxx
   #include "stm32wbxx_hal_crc.c"
-#elif STM32WBAxx
-  #include "stm32wbaxx_hal_crc.c"
 #elif STM32WLxx
   #include "stm32wlxx_hal_crc.c"
 #endif

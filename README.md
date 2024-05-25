@@ -1,4 +1,15 @@
-# Arduino core support for STM32 based boards
+# Arduino Plugin for SaberProp
+
+1. Open Arduino, go to 'Preferences' and add the following Board Manager URL: https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
+2. Go to 'Boards Manager' and install the 'STM32 MCU based boards' package version 2.7.1
+3. Go to Arduino package location ...\Arduino15\packages\STMicroelectronics\hardware\stm32\, backup and remove the installed version (folder 2.7.1)
+4. Clone this repository in the stm32 folder: git clone https://github.com/RSX-Engineering/arduino_saberprop-stm.git 2.7.1
+5. Download the [ProffieOSxs source code]() and open ProffieOS.ino
+6. Select the 'SaberProp Lite' board in Arduino    
+7. Verify and upload as usual.
+
+
+## Arduino core support for STM32 based boards
 [![forums](https://img.shields.io/badge/join-the%20forums-blue.svg)](https://www.stm32duino.com/)
 [![wiki](https://img.shields.io/badge/browse-the%20wiki-orange.svg)](https://github.com/stm32duino/Arduino_Core_STM32/wiki)
 [![STM32 Core Continuous Integration](https://github.com/stm32duino/Arduino_Core_STM32/actions/workflows/Arduino-build.yml/badge.svg?branch=main)](https://github.com/stm32duino/Arduino_Core_STM32/actions/workflows/Arduino-build.yml )
@@ -49,41 +60,48 @@ User can add a STM32 based board following this [wiki](https://github.com/stm32d
 
 ## Supported boards
 
- - [Nucleo 144 boards](#nucleo-144-boards)
- - [Nucleo 64 boards](#nucleo-64-boards)
- - [Nucleo 32 boards](#nucleo-32-boards)
- - [Discovery boards](#discovery-boards)
- - [Eval boards](#eval-boards)
- - [STM32MP1 series coprocessor boards](#stm32mp1-series-coprocessor-boards)
- - [Generic STM32C0 boards](#generic-stm32c0-boards)
- - [Generic STM32F0 boards](#generic-stm32f0-boards)
- - [Generic STM32F1 boards](#generic-stm32f1-boards)
- - [Generic STM32F2 boards](#generic-stm32f2-boards)
- - [Generic STM32F3 boards](#generic-stm32f3-boards)
- - [Generic STM32F4 boards](#generic-stm32f4-boards)
- - [Generic STM32F7 boards](#generic-stm32f7-boards)
- - [Generic STM32G0 boards](#generic-stm32g0-boards)
- - [Generic STM32G4 boards](#generic-stm32g4-boards)
- - [Generic STM32H5 boards](#generic-stm32h5-boards)
- - [Generic STM32H7 boards](#generic-stm32h7-boards)
- - [Generic STM32L0 boards](#generic-stm32l0-boards)
- - [Generic STM32L1 boards](#generic-stm32l1-boards)
- - [Generic STM32L4 boards](#generic-stm32l4-boards)
- - [Generic STM32L5 boards](#generic-stm32l5-boards)
- - [Generic STM32U5 boards](#generic-stm32u5-boards)
- - [Generic STM32WB boards](#generic-stm32wb-boards)
- - [Generic STM32WBA boards](#generic-stm32wba-boards)
- - [Generic STM32WL boards](#generic-stm32wl-boards)
- - [3D printer boards](#3d-printer-boards)
- - [Blues Wireless boards](#blues-wireless-boards)
- - [Elecgator boards](#elecgator-boards)
- - [Electronic Speed Controller boards](#electronic-speed-controller-boards)
- - [Garatronic/McHobby boards](#garatronicmchobby-boards)
- - [Generic flight controllers](#generic-flight-controllers)
- - [IoT continuum boards](#iot-continuum-boards)
- - [LoRa boards](#lora-boards)
- - [Midatronics boards](#midatronics-boards)
- - [SparkFun boards](#sparkfun-boards)
+- [Arduino Plugin for SaberProp](#arduino-plugin-for-saberprop)
+  - [Arduino core support for STM32 based boards](#arduino-core-support-for-stm32-based-boards)
+  - [Introduction](#introduction)
+  - [Getting Started](#getting-started)
+  - [Supported boards](#supported-boards)
+    - [Nucleo 144 boards](#nucleo-144-boards)
+    - [Nucleo 64 boards](#nucleo-64-boards)
+    - [Nucleo 32 boards](#nucleo-32-boards)
+    - [Discovery boards](#discovery-boards)
+    - [Eval boards](#eval-boards)
+    - [STM32MP1 series coprocessor boards](#stm32mp1-series-coprocessor-boards)
+    - [Generic STM32C0 boards](#generic-stm32c0-boards)
+    - [Generic STM32F0 boards](#generic-stm32f0-boards)
+    - [Generic STM32F1 boards](#generic-stm32f1-boards)
+    - [Generic STM32F2 boards](#generic-stm32f2-boards)
+    - [Generic STM32F3 boards](#generic-stm32f3-boards)
+    - [Generic STM32F4 boards](#generic-stm32f4-boards)
+    - [Generic STM32F7 boards](#generic-stm32f7-boards)
+    - [Generic STM32G0 boards](#generic-stm32g0-boards)
+    - [Generic STM32G4 boards](#generic-stm32g4-boards)
+    - [Generic STM32H5 boards](#generic-stm32h5-boards)
+    - [Generic STM32H7 boards](#generic-stm32h7-boards)
+    - [Generic STM32L0 boards](#generic-stm32l0-boards)
+    - [Generic STM32L1 boards](#generic-stm32l1-boards)
+    - [Generic STM32L4 boards](#generic-stm32l4-boards)
+    - [Generic STM32L5 boards](#generic-stm32l5-boards)
+    - [Generic STM32U5 boards](#generic-stm32u5-boards)
+    - [Generic STM32WB boards](#generic-stm32wb-boards)
+    - [Generic STM32WBA boards](#generic-stm32wba-boards)
+    - [Generic STM32WL boards](#generic-stm32wl-boards)
+    - [3D printer boards](#3d-printer-boards)
+    - [Blues Wireless boards](#blues-wireless-boards)
+    - [Elecgator boards](#elecgator-boards)
+    - [Electronic Speed Controller boards](#electronic-speed-controller-boards)
+    - [Garatronic/McHobby boards](#garatronicmchobby-boards)
+    - [Generic flight controllers](#generic-flight-controllers)
+    - [IoT continuum boards](#iot-continuum-boards)
+    - [LoRa boards](#lora-boards)
+    - [Midatronics boards](#midatronics-boards)
+    - [SparkFun boards](#sparkfun-boards)
+  - [Next release](#next-release)
+  - [Troubleshooting](#troubleshooting)
 
 **Note about Status**:
   - :green_heart: board support is available since the specified release version.

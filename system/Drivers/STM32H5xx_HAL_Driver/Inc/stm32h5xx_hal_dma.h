@@ -663,7 +663,7 @@ typedef struct __DMA_HandleTypeDef
 #endif /* I3C2 */
 
 /* Software request */
-#define DMA_REQUEST_SW                DMA_CTR2_SWREQ /*!< DMA SW request              */
+#define DMA_REQUEST_SW                DMA_CTR2_SWREQ /*!< DMA SW request          */
 /**
   * @}
   */
@@ -805,6 +805,7 @@ typedef struct __DMA_HandleTypeDef
 /**
   * @}
   */
+
 
 
 /**
@@ -1016,11 +1017,11 @@ HAL_StatusTypeDef HAL_DMA_GetConfigChannelAttributes(DMA_HandleTypeDef const *co
 #if defined (DMA_RCFGLOCKR_LOCK0)
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 HAL_StatusTypeDef HAL_DMA_LockChannelAttributes(DMA_HandleTypeDef const *const hdma);
-#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 HAL_StatusTypeDef HAL_DMA_GetLockChannelAttributes(DMA_HandleTypeDef const *const hdma,
                                                    uint32_t *const pLockState);
 
-#endif /* DMA_RCFGLOCKR_LOCK0 */
+#endif /* defined (DMA_RCFGLOCKR_LOCK0) */
 
 /**
   * @}
@@ -1136,12 +1137,12 @@ HAL_StatusTypeDef HAL_DMA_GetLockChannelAttributes(DMA_HandleTypeDef const *cons
 #define IS_DMA_ATTRIBUTES(ATTRIBUTE)    \
   (((ATTRIBUTE) == DMA_CHANNEL_PRIV) || \
    ((ATTRIBUTE) == DMA_CHANNEL_NPRIV))
-#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 #define IS_DMA_GLOBAL_ACTIVE_FLAG_S(INSTANCE, GLOBAL_FLAG) \
   (((INSTANCE)->SMISR & (GLOBAL_FLAG)))
-#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 #define IS_DMA_GLOBAL_ACTIVE_FLAG_NS(INSTANCE, GLOBAL_FLAG) \
   (((INSTANCE)->MISR & (GLOBAL_FLAG)))
 

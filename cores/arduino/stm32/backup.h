@@ -24,7 +24,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32_def.h"
 #include "stm32yyxx_ll_rtc.h"
-#include "stm32yyxx_ll_pwr.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -121,15 +120,14 @@ static inline void setBackupRegister(uint32_t index, uint32_t value)
   LL_RTC_BAK_SetRegister(RTC, index, value);
 #elif defined(TAMP_BKP0R)
 #if defined(STM32G4xx) || defined(STM32H5xx) || defined(STM32L5xx) ||\
-    defined(STM32U5xx) || defined(STM32MP1xx) || defined(STM32WBAxx) ||\
-    defined(STM32WLxx)
+    defined(STM32U5xx) || defined(STM32MP1xx) || defined(STM32WLxx)
   /* For those series this API requires RTC even if it is not used
      and TAMP is used instead */
   LL_RTC_BKP_SetRegister(RTC, index, value);
 #else
   LL_RTC_BKP_SetRegister(TAMP, index, value);
 #endif
-#elif defined(PWR_BKP0R)
+#elif defined(BKPREG1)
   LL_PWR_BKP_SetRegister(index, value);
 #else
   UNUSED(index);
@@ -145,15 +143,14 @@ static inline uint32_t getBackupRegister(uint32_t index)
   return LL_RTC_BAK_GetRegister(RTC, index);
 #elif defined(TAMP_BKP0R)
 #if defined(STM32G4xx) || defined(STM32H5xx) || defined(STM32L5xx) ||\
-    defined(STM32U5xx) || defined(STM32MP1xx) || defined(STM32WBAxx) ||\
-    defined(STM32WLxx)
+    defined(STM32U5xx) || defined(STM32MP1xx) || defined(STM32WLxx)
   /* For those series this API requires RTC even if it is not used
      and TAMP is used instead */
   return LL_RTC_BKP_GetRegister(RTC, index);
 #else
   return LL_RTC_BKP_GetRegister(TAMP, index);
 #endif
-#elif defined(PWR_BKP0R)
+#elif defined(BKPREG1)
   return LL_PWR_BKP_GetRegister(index);
 #else
   UNUSED(index);

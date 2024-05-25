@@ -82,8 +82,6 @@ static PinName g_current_pin = NC;
 #define ADC_SAMPLINGTIME_INTERNAL ADC_SAMPLETIME_239CYCLES_5
 #elif defined(ADC_SAMPLETIME_160CYCLES_5)
 #define ADC_SAMPLINGTIME_INTERNAL ADC_SAMPLETIME_160CYCLES_5
-#elif defined(ADC_SAMPLETIME_814CYCLES_5)
-#define ADC_SAMPLINGTIME_INTERNAL ADC_SAMPLETIME_814CYCLES_5
 #else
 #error "ADC sampling time could not be defined for internal channels!"
 #endif
@@ -159,7 +157,6 @@ uint32_t get_adc_channel(PinName pin, uint32_t *bank)
     case 13:
       channel = ADC_CHANNEL_13;
       break;
-#ifdef ADC_CHANNEL_14
     case 14:
       channel = ADC_CHANNEL_14;
       break;
@@ -224,7 +221,6 @@ uint32_t get_adc_channel(PinName pin, uint32_t *bank)
     case 31:
       channel = ADC_CHANNEL_31;
       break;
-#endif
 #endif
 #endif
 #endif
@@ -409,11 +405,7 @@ void dac_write_value(PinName pin, uint32_t value, uint8_t do_init)
     }
 
     dacChannelConf.DAC_Trigger = DAC_TRIGGER_NONE;
-#if defined(DISABLE_DAC_OUTPUTBUFFER)
-    dacChannelConf.DAC_OutputBuffer = DAC_OUTPUTBUFFER_DISABLE;
-#else
     dacChannelConf.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
-#endif
 #if defined(DAC_OUTPUTSWITCH_ENABLE)
     dacChannelConf.DAC_OutputSwitch = DAC_OUTPUTSWITCH_ENABLE;
 #endif
@@ -571,7 +563,6 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 {
   /*##-1- Enable peripherals and GPIO Clocks #################################*/
   /* ADC Periph clock enable */
-#ifdef ADC1
   if (hadc->Instance == ADC1) {
 #ifdef __HAL_RCC_ADC1_CLK_ENABLE
     __HAL_RCC_ADC1_CLK_ENABLE();
@@ -580,9 +571,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
     __HAL_RCC_ADC12_CLK_ENABLE();
 #endif
   }
-#endif
 #ifdef ADC2
-  if (hadc->Instance == ADC2) {
+  else if (hadc->Instance == ADC2) {
 #ifdef __HAL_RCC_ADC2_CLK_ENABLE
     __HAL_RCC_ADC2_CLK_ENABLE();
 #endif
@@ -592,7 +582,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
   }
 #endif
 #ifdef ADC3
-  if (hadc->Instance == ADC3) {
+  else if (hadc->Instance == ADC3) {
 #ifdef __HAL_RCC_ADC3_CLK_ENABLE
     __HAL_RCC_ADC3_CLK_ENABLE();
 #endif
@@ -605,7 +595,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
   }
 #endif
 #ifdef ADC4
-  if (hadc->Instance == ADC4) {
+  else if (hadc->Instance == ADC4) {
 #ifdef __HAL_RCC_ADC4_CLK_ENABLE
     __HAL_RCC_ADC4_CLK_ENABLE();
 #endif
@@ -618,7 +608,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
   }
 #endif
 #ifdef ADC5
-  if (hadc->Instance == ADC5) {
+  else if (hadc->Instance == ADC5) {
 #if defined(ADC345_COMMON)
     __HAL_RCC_ADC345_CLK_ENABLE();
 #endif
@@ -657,7 +647,6 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
   __HAL_RCC_ADC_RELEASE_RESET();
 #endif
 
-#ifdef ADC1
   if (hadc->Instance == ADC1) {
 #ifdef __HAL_RCC_ADC1_FORCE_RESET
     __HAL_RCC_ADC1_FORCE_RESET();
@@ -678,9 +667,8 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
     __HAL_RCC_ADC12_CLK_DISABLE();
 #endif
   }
-#endif
 #ifdef ADC2
-  if (hadc->Instance == ADC2) {
+  else if (hadc->Instance == ADC2) {
 #ifdef __HAL_RCC_ADC2_FORCE_RESET
     __HAL_RCC_ADC2_FORCE_RESET();
 #endif
@@ -702,7 +690,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
   }
 #endif
 #ifdef ADC3
-  if (hadc->Instance == ADC3) {
+  else if (hadc->Instance == ADC3) {
 #ifdef __HAL_RCC_ADC3_FORCE_RESET
     __HAL_RCC_ADC3_FORCE_RESET();
 #endif
@@ -729,7 +717,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
   }
 #endif
 #ifdef ADC4
-  if (hadc->Instance == ADC4) {
+  else if (hadc->Instance == ADC4) {
 #ifdef __HAL_RCC_ADC4_FORCE_RESET
     __HAL_RCC_ADC4_FORCE_RESET();
 #endif
@@ -756,7 +744,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
   }
 #endif
 #ifdef ADC5
-  if (hadc->Instance == ADC5) {
+  else if (hadc->Instance == ADC5) {
 #if defined(ADC345_COMMON)
     __HAL_RCC_ADC345_FORCE_RESET();
     __HAL_RCC_ADC345_RELEASE_RESET();
@@ -793,8 +781,6 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
 #else
     AdcHandle.Instance = ADC2;
 #endif
-#elif defined(STM32WBAxx)
-    AdcHandle.Instance = ADC4;
 #else
     AdcHandle.Instance = ADC1;
 #if defined(ADC5) && defined(ADC_CHANNEL_TEMPSENSOR_ADC5)
@@ -891,8 +877,7 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
 #endif
   AdcHandle.Init.DiscontinuousConvMode = DISABLE;                       /* Parameter discarded because sequencer is disabled */
 #if !defined(STM32C0xx) && !defined(STM32F0xx) && !defined(STM32G0xx) && \
-    !defined(STM32L0xx) && !defined(STM32WBAxx) && !defined(STM32WLxx) && \
-    !defined(ADC_SUPPORT_2_5_MSPS)
+    !defined(STM32L0xx) && !defined(STM32WLxx) && !defined(ADC_SUPPORT_2_5_MSPS)
   AdcHandle.Init.NbrOfDiscConversion   = 0;                             /* Parameter discarded because sequencer is disabled */
 #endif
   AdcHandle.Init.ExternalTrigConv      = ADC_SOFTWARE_START;            /* Software start to trig the 1st conversion manually, without external event */
@@ -917,7 +902,7 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
   AdcHandle.Init.SamplingTimeCommon    = samplingTime;
 #endif
 #if defined(STM32C0xx) || defined(STM32G0xx) || defined(STM32U5xx) || \
-    defined(STM32WBAxx) || defined(STM32WLxx) || defined(ADC_SUPPORT_2_5_MSPS)
+    defined(STM32WLxx) || defined(ADC_SUPPORT_2_5_MSPS)
   AdcHandle.Init.SamplingTimeCommon1   = samplingTime;              /* Set sampling time common to a group of channels. */
   AdcHandle.Init.SamplingTimeCommon2   = samplingTime;              /* Set sampling time common to a group of channels, second common setting possible.*/
 #endif
@@ -981,8 +966,8 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
 #endif
 #if !defined(STM32C0xx) && !defined(STM32F0xx) && !defined(STM32F1xx) && \
     !defined(STM32F2xx) && !defined(STM32G0xx) && !defined(STM32L0xx) && \
-    !defined(STM32L1xx) && !defined(STM32WBAxx) && !defined(STM32WBxx) && \
-    !defined(STM32WLxx) && !defined(ADC1_V2_5)
+    !defined(STM32L1xx) && !defined(STM32WBxx) && !defined(STM32WLxx) && \
+    !defined(ADC1_V2_5)
   AdcChannelConf.Offset = 0;                                      /* Parameter discarded because offset correction is disabled */
 #endif
 #if defined (STM32H7xx) || defined(STM32MP1xx)

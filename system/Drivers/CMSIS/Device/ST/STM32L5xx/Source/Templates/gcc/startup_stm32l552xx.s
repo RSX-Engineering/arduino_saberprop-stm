@@ -124,6 +124,7 @@ Infinite_Loop:
 ******************************************************************************/
 	.section	.isr_vector,"a",%progbits
 	.type	g_pfnVectors, %object
+	.size	g_pfnVectors, .-g_pfnVectors
 
 
 g_pfnVectors:
@@ -253,7 +254,6 @@ g_pfnVectors:
 	.word	ICACHE_IRQHandler
 	.word	0
 
-	.size	g_pfnVectors, .-g_pfnVectors
 
 /*******************************************************************************
 *

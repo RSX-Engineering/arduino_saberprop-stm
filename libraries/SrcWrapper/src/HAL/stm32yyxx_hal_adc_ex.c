@@ -38,8 +38,6 @@
   #include "stm32u5xx_hal_adc_ex.c"
 #elif STM32WBxx
   #include "stm32wbxx_hal_adc_ex.c"
-#elif STM32WBAxx
-  #include "stm32wbaxx_hal_adc_ex.c"
 #elif STM32WLxx
   #include "stm32wlxx_hal_adc_ex.c"
 #endif

@@ -149,6 +149,17 @@ def update_file(filePath, compile_pattern, subs):
         file.write(fileContents)
 
 
+# get xml family
+def get_mcu_family(mcu_file):
+    xml_mcu = parse(str(mcu_file))
+    mcu_node = xml_mcu.getElementsByTagName("Mcu")[0]
+    mcu_family = mcu_node.attributes["Family"].value
+    if mcu_family.endswith("+"):
+        mcu_family = mcu_family[:-1]
+    xml_mcu.unlink()
+    return mcu_family
+
+
 # mcu file parsing
 def parse_mcu_file():
     global gpiofile
@@ -897,11 +908,9 @@ def can_pinmap(lst):
         )
     return dict(
         name=name,
-        hal=(
-            ["CAN", "CAN_LEGACY"]
-            if name != "FDCAN" and any(mcu in mcu_family for mcu in legacy_hal["CAN"])
-            else name
-        ),
+        hal=["CAN", "CAN_LEGACY"]
+        if name != "FDCAN" and any(mcu in mcu_family for mcu in legacy_hal["CAN"])
+        else name,
         aname=aname,
         data="",
         wpin=max(wpin) + 1,
@@ -930,11 +939,9 @@ def eth_pinmap():
         )
     return dict(
         name="ETHERNET",
-        hal=(
-            ["ETH", "ETH_LEGACY"]
-            if any(mcu in mcu_family for mcu in legacy_hal["ETH"])
-            else "ETH"
-        ),
+        hal=["ETH", "ETH_LEGACY"]
+        if any(mcu in mcu_family for mcu in legacy_hal["ETH"])
+        else "ETH",
         aname="Ethernet",
         data="",
         wpin=max(wpin) + 1,
@@ -2134,11 +2141,10 @@ def merge_dir(out_temp_path, group_mcu_dir, mcu_family, periph_xml, variant_exp)
     mcu_dir = group_mcu_dir[0]
     # Merge if needed
     if len(group_mcu_dir) != 1:
-        # Handle mcu name length dynamically
-        # Add 3 for extra information line, #pin and flash
-        index_mcu_base = (
-            len(mcu_family.name.removeprefix("STM32").removesuffix("xx")) + 3
-        )
+        index_mcu_base = 5
+        # Key function
+        if "MP1" in mcu_family.name:
+            index_mcu_base += 1
 
         # Extract only dir name
         for dir_name in group_mcu_dir:
@@ -2250,7 +2256,7 @@ def merge_dir(out_temp_path, group_mcu_dir, mcu_family, periph_xml, variant_exp)
 # Aggregating all generated files
 def aggregate_dir():
     # Get mcu_family directories
-    out_temp_path = tmp_dir
+    out_temp_path = cur_dir / "variants"
     mcu_families = sorted(out_temp_path.glob("STM32*/"))
 
     group_mcu_dir = []
@@ -2488,21 +2494,22 @@ def manage_repo():
 
 
 # main
-tmp_dir = script_path / "variants"
-root_dir = script_path.parents[1]
+cur_dir = Path.cwd()
+tmp_dir = cur_dir / "variants"
+root_dir = cur_dir.parents[1]
 system_path = root_dir / "system"
-templates_dir = script_path / "templates"
+templates_dir = cur_dir / "templates"
 mcu_family_dir = ""
 filtered_family = ""
-refname_filter = ["STM32MP13", "STM32H7R", "STM32H7S"]
+# filtered_mcu_file = ""
 periph_c_filename = "PeripheralPins.c"
 pinvar_h_filename = "PinNamesVar.h"
-config_filename = script_path / "variant_config.json"
+config_filename = Path("variant_config.json")
 variant_h_filename = "variant_generic.h"
 variant_cpp_filename = "variant_generic.cpp"
 boards_entry_filename = "boards_entry.txt"
 generic_clock_filename = "generic_clock.c"
-repo_local_path = script_path / "repo"
+repo_local_path = cur_dir / "repo"
 cubemxdir = Path()
 gh_url = "https://github.com/STMicroelectronics/STM32_open_pin_data"
 repo_name = gh_url.rsplit("/", 1)[-1]
@@ -2546,6 +2553,18 @@ group.add_argument(
     help="list available xml files description in database",
     action="store_true",
 )
+# group.add_argument(
+#     "-m",
+#     "--mcu",
+#     metavar="xml",
+#     help=textwrap.dedent(
+#         """\
+# Generate all files for specified mcu xml file description in database.
+# This xml file can contain non alpha characters in its name,
+# you should call it with double quotes.
+# """
+#     ),
+# )
 
 group.add_argument(
     "-f",
@@ -2602,12 +2621,22 @@ Please check the value set for 'CUBEMX_DIRECTORY' in '{config_filename}' file.""
             db_release = item.attributes["Release"].value
 
 # Process DB release
-release_regex = r".*(\d+\.\d+\.\d+)$"
+release_regex = r".*(\d+.\d+.\d+)$"
 release_match = re.match(release_regex, db_release)
 if release_match:
     db_release = release_match.group(1)
 print(f"CubeMX DB release {db_release}\n")
 
+# if args.mcu:
+#     # Check input file exists
+#     if not ((dirMCU / args.mcu).is_file()):
+#         print("\n" + args.mcu + " file not found")
+#         print("\nCheck in " + dirMCU + " the correct name of this file")
+#         print("\nYou may use double quotes for file containing special characters")
+#         quit()
+#     # Get the family of the desired mcu file
+#     filtered_mcu_file = dirMCU / args.mcu
+#     filtered_family = get_mcu_family(filtered_mcu_file)
 if args.family:
     filtered_family = args.family.upper()
 # Get all xml files
@@ -2634,13 +2663,8 @@ for mcu_file in mcu_list:
     # Open input file
     xml_mcu = parse(str(mcu_file))
     parse_mcu_file()
-
-    # Generate only for one family or supported reference
-    if (
-        filtered_family
-        and filtered_family not in mcu_family
-        or any(skp in mcu_refname for skp in refname_filter)
-    ):
+    # Generate only for one family
+    if filtered_family and filtered_family not in mcu_family or "MP13" in mcu_refname:
         xml_mcu.unlink()
         continue
 

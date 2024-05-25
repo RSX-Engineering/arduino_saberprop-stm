@@ -926,7 +926,7 @@ HAL_StatusTypeDef HAL_SMBUS_Master_Transmit_IT(SMBUS_HandleTypeDef *hsmbus, uint
                                                uint8_t *pData, uint16_t Size, uint32_t XferOptions)
 {
   uint32_t tmp;
-  uint32_t sizetoxfer;
+  uint32_t sizetoxfer = 0U;
 
   /* Check the parameters */
   assert_param(IS_SMBUS_TRANSFER_OPTIONS_REQUEST(XferOptions));
@@ -960,10 +960,10 @@ HAL_StatusTypeDef HAL_SMBUS_Master_Transmit_IT(SMBUS_HandleTypeDef *hsmbus, uint
     }
 
     sizetoxfer = hsmbus->XferSize;
-    if ((sizetoxfer > 0U) && ((XferOptions == SMBUS_FIRST_FRAME) ||
-                              (XferOptions == SMBUS_FIRST_AND_LAST_FRAME_NO_PEC) ||
-                              (XferOptions == SMBUS_FIRST_FRAME_WITH_PEC) ||
-                              (XferOptions == SMBUS_FIRST_AND_LAST_FRAME_WITH_PEC)))
+    if ((hsmbus->XferSize > 0U) && ((XferOptions == SMBUS_FIRST_FRAME) ||
+                                    (XferOptions == SMBUS_FIRST_AND_LAST_FRAME_NO_PEC) ||
+                                    (XferOptions == SMBUS_FIRST_FRAME_WITH_PEC) ||
+                                    (XferOptions == SMBUS_FIRST_AND_LAST_FRAME_WITH_PEC)))
     {
       if (hsmbus->pBuffPtr != NULL)
       {
@@ -2619,11 +2619,8 @@ static void SMBUS_ITErrorHandler(SMBUS_HandleTypeDef *hsmbus)
     __HAL_SMBUS_CLEAR_FLAG(hsmbus, SMBUS_FLAG_PECERR);
   }
 
-  if (hsmbus->ErrorCode != HAL_SMBUS_ERROR_NONE)
-  {
-    /* Flush TX register */
-    SMBUS_Flush_TXDR(hsmbus);
-  }
+  /* Flush TX register */
+  SMBUS_Flush_TXDR(hsmbus);
 
   /* Store current volatile hsmbus->ErrorCode, misra rule */
   tmperror = hsmbus->ErrorCode;

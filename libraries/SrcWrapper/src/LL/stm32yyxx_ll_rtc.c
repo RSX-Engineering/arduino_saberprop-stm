@@ -38,8 +38,6 @@
   #include "stm32u5xx_ll_rtc.c"
 #elif STM32WBxx
   #include "stm32wbxx_ll_rtc.c"
-#elif STM32WBAxx
-  #include "stm32wbaxx_ll_rtc.c"
 #elif STM32WLxx
   #include "stm32wlxx_ll_rtc.c"
 #endif

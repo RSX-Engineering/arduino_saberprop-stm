@@ -623,6 +623,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetTIMBreakInputs(void)
 }
 
 
+
 /** @defgroup SYSTEM_LL_EF_SYSCFG_Secure_Management Secure Management
   * @{
   */

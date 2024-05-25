@@ -15,7 +15,6 @@
     defined(ARDUINO_GENERIC_C011F6UX) || defined(ARDUINO_GENERIC_C031F4PX) ||\
     defined(ARDUINO_GENERIC_C031F6PX)
 #include "pins_arduino.h"
-#include "stm32yyxx_ll_utils.h"
 
 /**
   * @brief  System Clock Configuration

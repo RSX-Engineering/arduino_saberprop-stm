@@ -1,12 +1,13 @@
 /**
   ******************************************************************************
   * @file    stm32h5xx_hal_ramcfg.c
-  * @author  GPM Application Team
+  * @author  MCD Application Team
   * @brief   RAMCFG HAL module driver.
   *          This file provides firmware functions to manage the following
   *          functionalities of the RAMs configuration controller peripheral:
   *           + RAMCFG Initialization and De-initialization Functions.
   *           + RAMCFG ECC Operation Functions.
+  *           + RAMCFG Configure Wait State Functions.
   *           + RAMCFG Write Protection Functions.
   *           + RAMCFG Erase Operation Functions.
   *           + RAMCFG Handle Interrupt and Callbacks Functions.
@@ -75,11 +76,8 @@
               call HAL_RAMCFG_GetDoubleErrorAddress() to get the address of the
               last fail RAM word detected (only for double error).
 
-          (+) Call HAL_RAMCFG_IsECCSingleErrorDetected() to check if an ECC single
-              error was detected.
-              Call HAL_RAMCFG_IsECCDoubleErrorDetected() to check if an ECC double
-              error was detected.
-              These APIs are used in silent mode (No ECC interrupt
+          (+) Call HAL_RAMCFG_IsECCErrorDetected() to check if an ECC single/double
+              error was detected. This API is used in silent mode (No ECC interrupt
               is enabled).
 
      *** Write protection feature ***
@@ -219,7 +217,7 @@ HAL_StatusTypeDef HAL_RAMCFG_Init(RAMCFG_HandleTypeDef *hramcfg)
   /* Clear RAMCFG monitor flags */
   __HAL_RAMCFG_CLEAR_FLAG(hramcfg, RAMCFG_FLAGS_ALL);
 
-  /* Initialize the RAMCFG error code */
+  /* Initialise the RAMCFG error code */
   hramcfg->ErrorCode = HAL_RAMCFG_ERROR_NONE;
 
   /* Initialize the RAMCFG state */
@@ -331,10 +329,8 @@ __weak void HAL_RAMCFG_MspDeInit(RAMCFG_HandleTypeDef *hramcfg)
       The HAL_RAMCFG_DisableNotification() function allows disabling interrupts
       for single ECC error, double ECC error. When NMI interrupt is enabled it
       can only be disabled by a global peripheral reset or by a system reset.
-      The HAL_RAMCFG_IsECCSingleErrorDetected() function allows to check if an
-      single ECC error has occurred.
-      The HAL_RAMCFG_IsECCDoubleErrorDetected() function allows to check if an
-      double ECC error has occurred.
+      The HAL_RAMCFG_IsECCErrorDetected() function allows to check if an ECC error
+      has occurred.
       The HAL_RAMCFG_GetSingleErrorAddress() function allows to get the address of
       the last single ECC error detected.
       The HAL_RAMCFG_GetDoubleErrorAddress() function allows to get the address of
@@ -368,15 +364,10 @@ HAL_StatusTypeDef HAL_RAMCFG_StartECC(RAMCFG_HandleTypeDef *hramcfg)
     {
       /* Start the SRAM ECC mechanism and latching the error address */
       hramcfg->Instance->CR |= (RAMCFG_CR_ECCE | RAMCFG_CR_ALE);
-    }
-    else
-    {
-      /* Start latching the error address */
-      hramcfg->Instance->CR |= RAMCFG_CR_ALE;
-    }
 
-    /* Update the RAMCFG state */
-    hramcfg->State = HAL_RAMCFG_STATE_READY;
+      /* Update the RAMCFG state */
+      hramcfg->State = HAL_RAMCFG_STATE_READY;
+    }
   }
   else
   {
@@ -416,9 +407,10 @@ HAL_StatusTypeDef HAL_RAMCFG_StopECC(RAMCFG_HandleTypeDef *hramcfg)
 
       /* Stop the SRAM ECC mechanism and latching the error address */
       hramcfg->Instance->CR &= ~(RAMCFG_CR_ECCE | RAMCFG_CR_ALE);
+
+      /* Update the RAMCFG state */
+      hramcfg->State = HAL_RAMCFG_STATE_READY;
     }
-    /* Update the RAMCFG state */
-    hramcfg->State = HAL_RAMCFG_STATE_READY;
   }
   else
   {
@@ -538,7 +530,7 @@ uint32_t HAL_RAMCFG_IsECCDoubleErrorDetected(const RAMCFG_HandleTypeDef *hramcfg
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
 
-  /* Return the state of DED flag */
+  /* Return the state of DEDC flag */
   return ((READ_BIT(hramcfg->Instance->ISR, RAMCFG_FLAG_DOUBLEERR) == (RAMCFG_FLAG_DOUBLEERR)) ? 1UL : 0UL);
 }
 
@@ -571,7 +563,6 @@ uint32_t HAL_RAMCFG_GetDoubleErrorAddress(const RAMCFG_HandleTypeDef *hramcfg)
 
   return hramcfg->Instance->DEAR;
 }
-
 /**
   * @}
   */
@@ -611,9 +602,6 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg
   uint32_t page_mask_0 = 0U;
   uint32_t page_mask_1 = 0U;
 
-#if defined (RAMCFG_WPR3_P64WP)
-  uint32_t page_mask_2 = 0U;
-#endif /* RAMCFG_WPR3_P64WP */
   /* Check the parameters */
   assert_param(IS_RAMCFG_WP_INSTANCE(hramcfg->Instance));
   assert_param(IS_RAMCFG_WRITEPROTECTION_PAGE(StartPage + NbPage));
@@ -624,29 +612,6 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg
     /* Update RAMCFG peripheral state */
     hramcfg->State = HAL_RAMCFG_STATE_BUSY;
 
-#if defined (RAMCFG_WPR3_P64WP)
-    /* Repeat for page number to be protected */
-    for (uint32_t count = 0U; count < NbPage; count++)
-    {
-      if ((StartPage + count) < 32U)
-      {
-        page_mask_0 |= (1UL << (StartPage + count));
-      }
-      else if ((StartPage + count) < 64U)
-      {
-        page_mask_1 |= (1UL << ((StartPage + count) - 32U));
-      }
-      else
-      {
-        page_mask_2 |= (1UL << ((StartPage + count) - 64U));
-      }
-    }
-
-    /* Apply mask to protect pages */
-    SET_BIT(hramcfg->Instance->WPR1, page_mask_0);
-    SET_BIT(hramcfg->Instance->WPR2, page_mask_1);
-    SET_BIT(hramcfg->Instance->WPR3, page_mask_2);
-#else
     /* Repeat for page number to be protected */
     for (uint32_t count = 0U; count < NbPage; count++)
     {
@@ -663,7 +628,7 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg
     /* Apply mask to protect pages */
     SET_BIT(hramcfg->Instance->WPR1, page_mask_0);
     SET_BIT(hramcfg->Instance->WPR2, page_mask_1);
-#endif /* RAMCFG_WPR3_P64WP */
+
     /* Update the RAMCFG state */
     hramcfg->State = HAL_RAMCFG_STATE_READY;
   }
@@ -676,7 +641,6 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg
 
   return status;
 }
-
 /**
   * @}
   */
@@ -754,7 +718,6 @@ HAL_StatusTypeDef HAL_RAMCFG_Erase(RAMCFG_HandleTypeDef *hramcfg)
 
   return HAL_OK;
 }
-
 /**
   * @}
   */
@@ -1046,7 +1009,6 @@ HAL_StatusTypeDef HAL_RAMCFG_UnRegisterCallback(RAMCFG_HandleTypeDef *hramcfg, H
 
   return status;
 }
-
 /**
   * @}
   */
@@ -1060,7 +1022,7 @@ HAL_StatusTypeDef HAL_RAMCFG_UnRegisterCallback(RAMCFG_HandleTypeDef *hramcfg, H
  ===============================================================================
     [..]
       This section provides functions to check and get the RAMCFG state
-      and the error code.
+    and the error code.
     [..]
       The HAL_RAMCFG_GetState() function allows the user to get the RAMCFG peripheral
       state.
@@ -1102,7 +1064,6 @@ uint32_t HAL_RAMCFG_GetError(const RAMCFG_HandleTypeDef *hramcfg)
   /* Return the RAMCFG error code */
   return hramcfg->ErrorCode;
 }
-
 /**
   * @}
   */

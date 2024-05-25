@@ -918,20 +918,12 @@ typedef struct
 #define IS_ADC_INJECTED_NB_CONV(__LENGTH__) (((__LENGTH__) >= (1U)) && ((__LENGTH__) <= (4U)))
 
 /**
-  * @brief Calibration factor size verification (11 bits maximum).
+  * @brief Calibration factor size verification (7 bits maximum).
   * @param __CALIBRATION_FACTOR__ Calibration factor value.
   * @retval SET (__CALIBRATION_FACTOR__ is within the authorized size) or RESET (__CALIBRATION_FACTOR__ is too large)
   */
-#define IS_ADC_CALFACT(__CALIBRATION_FACTOR__) ((__CALIBRATION_FACTOR__) <= (0x7FFU))
+#define IS_ADC_CALFACT(__CALIBRATION_FACTOR__) ((__CALIBRATION_FACTOR__) <= (0x7FU))
 
-#if defined(ADC_VER_V5_V90)
-/**
-  * @brief Calibration factor size verification (7 bits maximum on ADC3).
-  * @param __CALIBRATION_FACTOR__ Calibration factor value.
-  * @retval SET (__CALIBRATION_FACTOR__ is within the authorized size) or RESET (__CALIBRATION_FACTOR__ is too large)
-  */
-#define IS_ADC_CALFACT_ADC3(__CALIBRATION_FACTOR__) ((__CALIBRATION_FACTOR__) <= (0x7FU))
-#endif
 
 /**
   * @brief Verify the ADC channel setting.
